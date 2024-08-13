@@ -1,0 +1,47 @@
+package Pack;
+import java.util.*;
+import java.util.concurrent.*;
+
+public class ChoiceBasedAdventure {
+    private static Map<String, String> scenarios = new HashMap<>();
+    private static Map<String, String[]> choices = new HashMap<>();
+
+    static {
+        scenarios.put("start", "You are in a dark forest. Do you go 'north' or 'south'?");
+        scenarios.put("north", "You find a treasure chest. Do you 'open' it or 'leave' it?");
+        scenarios.put("south", "You encounter a dragon. Do you 'fight' it or 'run' away?");
+        scenarios.put("chest", "You find gold inside the chest. Do you 'take' it or 'leave' it?");
+        scenarios.put("fight", "You defeat the dragon and find a key. Do you 'take' the key or 'leave' it?");
+        scenarios.put("run", "You escape but feel like you've missed something valuable.");
+        
+        choices.put("start", new String[]{"north", "south"});
+        choices.put("north", new String[]{"open", "leave"});
+        choices.put("south", new String[]{"fight", "run"});
+        choices.put("chest", new String[]{"take", "leave"});
+        choices.put("fight", new String[]{"take", "leave"});
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String currentScenario = "start";
+
+        while (true) {
+            System.out.println(scenarios.get(currentScenario));
+            String choice = scanner.nextLine();
+
+            if (Arrays.asList(choices.get(currentScenario)).contains(choice.toLowerCase())) {
+                if (currentScenario.equals("start")) {
+                    currentScenario = choice.equalsIgnoreCase("north") ? "north" : "south";
+                } else if (currentScenario.equals("north")) {
+                    currentScenario = choice.equalsIgnoreCase("open") ? "chest" : "end";
+                } else if (currentScenario.equals("south")) {
+                    currentScenario = choice.equalsIgnoreCase("fight") ? "fight" : "end";
+                } else if (currentScenario.equals("chest") || currentScenario.equals("fight")) {
+                    System.out.println("The adventure ends here.");
+                    break;
+                }
+            } else {
+                System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
